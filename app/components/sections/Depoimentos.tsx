@@ -63,18 +63,18 @@ const depoimentos = [
   {
     text: "Experiência excepcional e ser paciente da Simone. Profissional com uma empatia ímpar, que de forma orgânica faz com que o paciente tenha um progresso natural na condução da terapia. Apenas agradecer por ser tua paciente e ver minha evolução constante. Obrigada por fazer cada sessão valer apena.",
     name: "A. J.",
-    role: "Paciente há 2 anos",
+    role: "Paciente há 4 anos",
     stars: 5,
   },
   {
     text: "A Dra. Simone Caceres criou um espaço seguro onde me senti confortável para falar sobre questões que carregava há muito tempo. A terapia mudou minha perspectiva de vida.",
     name: "R. L.",
-    role: "Paciente há 1 ano",
+    role: "Paciente há 2 ano",
     stars: 5,
   },
   {
-    text: "Começamos a terapia de casal em um momento difícil. Hoje, nossa comunicação é muito melhor e reencontramos a parceria que tínhamos perdido.",
-    name: "A. & P.",
+    text: "Adoro a Dr Simone, super indico, muito atenciosa. Profissional top!!",
+    name: "V. R.",
     role: "Paciente há 8 meses",
     stars: 5,
   },

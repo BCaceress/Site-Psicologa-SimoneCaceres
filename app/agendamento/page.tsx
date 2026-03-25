@@ -6,12 +6,11 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const WHATSAPP_NUMBER = "5551981428765";
+const WHATSAPP_NUMBER = "5551999056576";
 
 const tiposAtendimento = [
   { value: "online", label: "Atendimento Online" },
-  { value: "infantil", label: "Atendimento Infantil" },
-  { value: "adulto", label: "Atendimento Adulto" },
+  { value: "presencial", label: "Atendimento Presencial" },
 ] as const;
 
 type DisponibilidadeDia = {
@@ -24,10 +23,14 @@ export default function Agendamento() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [loadingDisponibilidade, setLoadingDisponibilidade] = useState(false);
-  const [cargaInicialDisponibilidadeFeita, setCargaInicialDisponibilidadeFeita] =
-    useState(false);
+  const [
+    cargaInicialDisponibilidadeFeita,
+    setCargaInicialDisponibilidadeFeita,
+  ] = useState(false);
   const [erroDisponibilidade, setErroDisponibilidade] = useState("");
-  const [disponibilidade, setDisponibilidade] = useState<DisponibilidadeDia[]>([]);
+  const [disponibilidade, setDisponibilidade] = useState<DisponibilidadeDia[]>(
+    [],
+  );
 
   const [formData, setFormData] = useState({
     tipo: "",
@@ -42,8 +45,7 @@ export default function Agendamento() {
 
   const tipoSelecionado = formData.tipo;
   const isOnline = tipoSelecionado === "online";
-  const isContatoClinica =
-    tipoSelecionado === "infantil" || tipoSelecionado === "adulto";
+  const isContatoClinica = tipoSelecionado === "presencial";
 
   const dataSelecionada = useMemo(
     () => disponibilidade.find((d) => d.date === formData.data),
@@ -53,16 +55,12 @@ export default function Agendamento() {
   const horariosDisponiveis = dataSelecionada?.slots ?? [];
 
   const whatsappLink = useMemo(() => {
-    const tipoLabel =
-      tiposAtendimento.find((tipo) => tipo.value === tipoSelecionado)?.label ??
-      "atendimento";
-
     const texto = encodeURIComponent(
-      `Olá, gostaria de agendar ${tipoLabel.toLowerCase()} com a clínica.`,
+      "Olá, gostaria de agendar atendimento presencial com a psicóloga Simone Caceres.",
     );
 
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${texto}`;
-  }, [tipoSelecionado]);
+  }, []);
 
   const carregarDisponibilidade = async () => {
     setLoadingDisponibilidade(true);
@@ -78,7 +76,9 @@ export default function Agendamento() {
       };
 
       if (!res.ok) {
-        throw new Error(data.error || "Não foi possível carregar disponibilidade.");
+        throw new Error(
+          data.error || "Não foi possível carregar disponibilidade.",
+        );
       }
 
       setDisponibilidade(data.dates ?? []);
@@ -143,8 +143,8 @@ export default function Agendamento() {
               Escolha seu tipo de atendimento
             </h1>
             <p className="text-charcoal-light leading-relaxed max-w-xl mx-auto">
-              Online: horários sincronizados com a agenda da clínica em blocos de
-              1 hora. Infantil e Adulto: contato direto pelo WhatsApp da clínica.
+              Online: horários sincronizados com a agenda pessoal. Presencial:
+              contato direto pelo WhatsApp da clínica.
             </p>
           </div>
 
@@ -187,7 +187,7 @@ export default function Agendamento() {
                 <h2 className="font-serif text-xl font-semibold text-charcoal">
                   1. Tipo de atendimento
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {tiposAtendimento.map((tipo) => (
                     <button
                       key={tipo.value}
@@ -208,7 +208,7 @@ export default function Agendamento() {
               {isContatoClinica && (
                 <section className="rounded-xl bg-cream p-6 space-y-4">
                   <h3 className="font-serif text-lg font-semibold text-charcoal">
-                    Atendimento {tipoSelecionado === "infantil" ? "Infantil" : "Adulto"}
+                    Atendimento Presencial
                   </h3>
                   <p className="text-sm text-charcoal-light leading-relaxed">
                     Para este tipo de atendimento, fale com a clínica no
@@ -278,7 +278,9 @@ export default function Agendamento() {
                       )}
 
                       {erroDisponibilidade && (
-                        <p className="text-sm text-terracotta">{erroDisponibilidade}</p>
+                        <p className="text-sm text-terracotta">
+                          {erroDisponibilidade}
+                        </p>
                       )}
 
                       {!loadingDisponibilidade && !erroDisponibilidade && (
@@ -447,8 +449,8 @@ export default function Agendamento() {
                           className="mt-1 w-4 h-4 rounded border-cream-dark text-sage focus:ring-sage/30"
                         />
                         <label className="text-xs text-charcoal-light leading-relaxed">
-                          Concordo com a política de privacidade e autorizo o uso
-                          dos dados enviados conforme a LGPD. *
+                          Concordo com a política de privacidade e autorizo o
+                          uso dos dados enviados conforme a LGPD. *
                         </label>
                       </div>
 

@@ -1,4 +1,4 @@
-const especialidades = [
+﻿const especialidades = [
   {
     title: "Ansiedade",
     description:
@@ -22,7 +22,7 @@ const especialidades = [
   {
     title: "Depressão",
     description:
-      "Acompanhamento terapêutico para quadros depressivos com abordagem acolhedora e técnicas baseadas em evidências. Juntos, construímos caminhos para reencontrar sentido e bem-estar emocional.",
+      "No tratamento para depressão, o terapeuta ajuda o paciente a expressar seus pensamentos e sentimentos, buscando a origem da dor emocional.",
     icon: (
       <svg
         className="w-7 h-7"

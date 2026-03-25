@@ -17,7 +17,7 @@ const etapas = [
     step: "03",
     title: "Processo Terapêutico",
     description:
-      "Sessões semanais de 50 minutos, presenciais ou online, com acompanhamento contínuo do seu progresso e bem-estar emocional.",
+      "Sessões semanais de 40 minutos, presenciais ou online, com acompanhamento contínuo do seu progresso e bem-estar emocional.",
   },
   {
     step: "04",
@@ -83,7 +83,7 @@ const infoCards = [
         />
       </svg>
     ),
-    title: "50 minutos",
+    title: "40 minutos",
     description: "Duração de cada sessão, com pontualidade e total dedicação.",
   },
   {

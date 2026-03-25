@@ -6,7 +6,7 @@ const faqs = [
   {
     question: "Qual a duração de cada sessão?",
     answer:
-      "Cada sessão tem duração de 50 minutos. É importante manter a pontualidade para que possamos aproveitar o tempo ao máximo.",
+      "Cada sessão tem duração de 40 minutos. É importante manter a pontualidade para que possamos aproveitar o tempo ao máximo.",
   },
   {
     question: "A terapia pode ser online?",

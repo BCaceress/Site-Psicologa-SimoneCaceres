@@ -37,11 +37,10 @@ export default function Sobre() {
             <div className="space-y-4 text-charcoal-light leading-relaxed">
               <p>
                 Olá, meu nome é Simone Caceres Soares, sou Psicóloga Clínica
-                (CRP 07/31309) desde 2019 e atualmente estou em formação em
-                Psicanálise. Atendo de forma presencial e online no Rio Grande
-                do Sul, oferecendo um espaço de escuta acolhedora, ética e
-                respeitosa para quem deseja compreender melhor suas emoções, sua
-                história e seus desafios.
+                (CRP 07/31309) e Psicanalista. Atendo de forma presencial e
+                online no Rio Grande do Sul, oferecendo um espaço de escuta
+                acolhedora, ética e respeitosa para quem deseja compreender
+                melhor suas emoções, sua história e seus desafios.
               </p>
               <p>
                 Meu interesse pela psicanálise surgiu ainda durante a graduação,
@@ -80,7 +79,7 @@ export default function Sobre() {
                       />
                     </svg>
                   ),
-                  label: "Unisinos — Psicólogia",
+                  label: "Formação em Psicanálise",
                 },
                 {
                   icon: (
@@ -98,7 +97,7 @@ export default function Sobre() {
                       />
                     </svg>
                   ),
-                  label: "Esp. em Psicanálise",
+                  label: "Pós em Psicologia Infantil",
                 },
                 {
                   icon: (
@@ -134,7 +133,7 @@ export default function Sobre() {
                       />
                     </svg>
                   ),
-                  label: "+200 pacientes",
+                  label: "+800 pacientes",
                 },
               ].map((item, i) => (
                 <div
