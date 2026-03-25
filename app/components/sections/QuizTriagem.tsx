@@ -91,11 +91,11 @@ const ESPECIALIDADE_INFO: Record<string, { titulo: string; cor: string; corTexto
 
 function criarResultadoFallback(info: { titulo: string }): Resultado {
   return {
-    titulo: `Voce pode estar precisando de apoio com ${info.titulo}`,
+    titulo: `Você pode estar precisando de apoio com ${info.titulo}`,
     descricao:
-      "Com base nas suas respostas, este pode ser um momento importante para olhar com mais cuidado para o que voce esta sentindo. A terapia pode oferecer um espaco seguro, acolhedor e profissional para esse processo.",
+      "Com base nas suas respostas, este pode ser um momento importante para olhar com mais cuidado para o que você está sentindo. A terapia pode oferecer um espaço seguro, acolhedor e profissional para esse processo.",
     especialidade: info.titulo,
-    mensagemWhatsApp: `Ola, Dra. Simone! Fiz o quiz no site e gostaria de conversar sobre ${info.titulo}.`,
+    mensagemWhatsApp: `Olá, Dra. Simone! Fiz o quiz no site e gostaria de conversar sobre ${info.titulo}.`,
   };
 }
 
