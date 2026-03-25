@@ -343,7 +343,7 @@ export default function Contato() {
                     E-mail
                   </h4>
                   <p className="text-sm text-charcoal-light">
-                    brunocaceres8@gmail.com
+                    psicologasimonecaceres@gmail.com
                   </p>
                 </div>
               </div>

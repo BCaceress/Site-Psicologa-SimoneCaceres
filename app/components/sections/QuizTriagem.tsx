@@ -513,18 +513,38 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
         >
           {etapa === "intro" && (
             <div className="p-8 lg:p-10 text-center">
-              <div className="w-16 h-16 mx-auto rounded-full bg-sage/10 flex items-center justify-center text-sage-dark mb-6">
+              <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-sage/15 border border-sage/20 shadow-sm">
                 <svg
-                  className="w-8 h-8"
+                  className="h-14 w-14"
+                  viewBox="0 0 64 64"
                   fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
+                  <circle cx="32" cy="32" r="30" fill="#9DB798" />
                   <path
+                    d="M32 16C26.75 16 22.5 20.25 22.5 25.5C22.5 30.75 26.75 35 32 35C37.25 35 41.5 30.75 41.5 25.5C41.5 20.25 37.25 16 32 16Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M18 47.5C18 40.6 23.6 35 30.5 35H33.5C40.4 35 46 40.6 46 47.5V49H18V47.5Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M42 18.5H49.5C52.54 18.5 55 20.96 55 24V29C55 32.04 52.54 34.5 49.5 34.5H47V39L42.5 34.5H42C38.96 34.5 36.5 32.04 36.5 29V24C36.5 20.96 38.96 18.5 42 18.5Z"
+                    fill="#F6F3EE"
+                  />
+                  <path
+                    d="M41.5 26.5H50"
+                    stroke="#9DB798"
+                    strokeWidth="2.4"
                     strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                  />
+                  <path
+                    d="M41.5 30H47.5"
+                    stroke="#9DB798"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
                   />
                 </svg>
               </div>

@@ -1,3 +1,4 @@
+import { createSign } from "node:crypto";
 import { NextResponse } from "next/server";
 
 type GoogleEvent = {
@@ -19,6 +20,8 @@ type Slot = {
 
 const TIME_ZONE = process.env.AGENDA_TIME_ZONE ?? "America/Sao_Paulo";
 const DAYS_AHEAD = Number(process.env.AGENDA_DAYS_AHEAD ?? 45);
+const GOOGLE_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
+const GOOGLE_CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
 
 function pad2(value: number): string {
   return String(value).padStart(2, "0");
@@ -134,15 +137,134 @@ function toBusyInterval(event: GoogleEvent): { startMs: number; endMs: number } 
   return { startMs, endMs };
 }
 
+function toBase64Url(value: string): string {
+  return Buffer.from(value)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function normalizePrivateKey(privateKey: string): string {
+  return privateKey.replace(/\\n/g, "\n");
+}
+
+function createGoogleServiceAccountJwt(
+  clientEmail: string,
+  privateKey: string,
+): string {
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: "RS256", typ: "JWT" };
+  const payload = {
+    iss: clientEmail,
+    scope: GOOGLE_CALENDAR_SCOPE,
+    aud: GOOGLE_TOKEN_ENDPOINT,
+    exp: now + 3600,
+    iat: now,
+  };
+
+  const encodedHeader = toBase64Url(JSON.stringify(header));
+  const encodedPayload = toBase64Url(JSON.stringify(payload));
+  const unsignedToken = `${encodedHeader}.${encodedPayload}`;
+
+  const signer = createSign("RSA-SHA256");
+  signer.update(unsignedToken);
+  signer.end();
+
+  const signature = signer
+    .sign(normalizePrivateKey(privateKey))
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+
+  return `${unsignedToken}.${signature}`;
+}
+
+async function getGoogleAccessToken(): Promise<string | null> {
+  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+
+  if (!clientEmail || !privateKey) {
+    return null;
+  }
+
+  const assertion = createGoogleServiceAccountJwt(clientEmail, privateKey);
+  const body = new URLSearchParams({
+    grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    assertion,
+  });
+
+  const response = await fetch(GOOGLE_TOKEN_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Falha ao autenticar com service account: ${text}`);
+  }
+
+  const data = (await response.json()) as { access_token?: string };
+  if (!data.access_token) {
+    throw new Error("Google OAuth respondeu sem access_token.");
+  }
+
+  return data.access_token;
+}
+
+async function fetchGoogleCalendarEvents(
+  calendarId: string,
+  timeMin: string,
+  timeMax: string,
+): Promise<{ items?: GoogleEvent[] }> {
+  const url = new URL(
+    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`,
+  );
+  url.searchParams.set("singleEvents", "true");
+  url.searchParams.set("orderBy", "startTime");
+  url.searchParams.set("maxResults", "2500");
+  url.searchParams.set("timeMin", timeMin);
+  url.searchParams.set("timeMax", timeMax);
+
+  const accessToken = await getGoogleAccessToken();
+  const apiKey = process.env.GOOGLE_CALENDAR_API_KEY;
+  const headers: HeadersInit = {};
+
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  } else if (apiKey) {
+    url.searchParams.set("key", apiKey);
+  } else {
+    throw new Error(
+      "Configuracao ausente. Use GOOGLE_SERVICE_ACCOUNT_EMAIL/PRIVATE_KEY para agenda privada ou GOOGLE_CALENDAR_API_KEY para agenda publica.",
+    );
+  }
+
+  const response = await fetch(url.toString(), {
+    headers,
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Falha ao consultar Google Calendar: ${text}`);
+  }
+
+  return (await response.json()) as { items?: GoogleEvent[] };
+}
+
 export async function GET() {
   const calendarId = process.env.GOOGLE_CALENDAR_ID;
-  const apiKey = process.env.GOOGLE_CALENDAR_API_KEY;
 
-  if (!calendarId || !apiKey) {
+  if (!calendarId) {
     return NextResponse.json(
       {
-        error:
-          "Configuração ausente. Defina GOOGLE_CALENDAR_ID e GOOGLE_CALENDAR_API_KEY no servidor.",
+        error: "Configuracao ausente. Defina GOOGLE_CALENDAR_ID no servidor.",
       },
       { status: 500 },
     );
@@ -155,29 +277,18 @@ export async function GET() {
 
   const timeMin = candidateSlots[0]?.start;
   const timeMax = candidateSlots[candidateSlots.length - 1]?.end;
-  const url = new URL(
-    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`,
-  );
-  url.searchParams.set("key", apiKey);
-  url.searchParams.set("singleEvents", "true");
-  url.searchParams.set("orderBy", "startTime");
-  url.searchParams.set("maxResults", "2500");
-  url.searchParams.set("timeMin", timeMin);
-  url.searchParams.set("timeMax", timeMax);
 
-  const response = await fetch(url.toString(), {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
+  let data: { items?: GoogleEvent[] };
+  try {
+    data = await fetchGoogleCalendarEvents(calendarId, timeMin, timeMax);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Erro desconhecido.";
     return NextResponse.json(
-      { error: "Falha ao consultar Google Calendar.", details: text },
+      { error: "Falha ao consultar Google Calendar.", details: message },
       { status: 502 },
     );
   }
 
-  const data = (await response.json()) as { items?: GoogleEvent[] };
   const busyIntervals = (data.items ?? [])
     .map(toBusyInterval)
     .filter((interval): interval is { startMs: number; endMs: number } => Boolean(interval));
