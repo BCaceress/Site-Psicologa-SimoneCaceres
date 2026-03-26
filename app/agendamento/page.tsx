@@ -31,7 +31,7 @@ export default function Agendamento() {
     <>
       <Header />
       <main className="pt-28 pb-20 bg-off-white min-h-screen">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
           <div className="text-center mb-12">
             <span className="inline-block text-sm tracking-[0.3em] uppercase text-sage-dark mb-3 font-medium">
               Agendamento
@@ -76,6 +76,10 @@ export default function Agendamento() {
                 <p className="text-sm text-charcoal-light leading-relaxed">
                   Para este tipo de atendimento, fale com a clínica no WhatsApp para
                   confirmar disponibilidade.
+                </p>
+                <p className="text-xs text-charcoal-light/90 leading-relaxed">
+                  <strong>EndereÃ§o da clÃ­nica:</strong> Avenida Presidente Vargas,
+                  2730 - SÃ£o SebastiÃ£o, Esteio - RS, CEP 93.265-226.
                 </p>
                 <div className="text-sm text-charcoal-light leading-relaxed">
                   <p>

@@ -548,17 +548,14 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
                   />
                 </svg>
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-charcoal mb-3">
+              <h3 className="font-serif text-2xl font-semibold text-sage-dark mb-6">
                 Descubra seu perfil emocional
               </h3>
-              <p className="text-sm font-medium text-sage-dark mb-3">
-                Mais de 200 pessoas já fizeram esse teste.
-              </p>
               <p className="text-sm text-charcoal-light max-w-md mx-auto mb-2">
                 Não existe resposta certa ou errada. É só um primeiro passo para
                 entender melhor o que você está vivendo agora.
               </p>
-              <p className="text-xs text-warm-gray mb-6">
+              <p className="text-xs text-warm-gray mb-8">
                 Não é um diagnóstico, e sim um ponto de partida para a sua
                 jornada.
               </p>

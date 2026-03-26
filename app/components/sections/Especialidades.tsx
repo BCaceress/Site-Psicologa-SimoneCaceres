@@ -130,7 +130,7 @@
 export default function Especialidades() {
   return (
     <section id="especialidades" className="py-20 lg:py-32 bg-cream">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[84rem] mx-auto px-5 sm:px-8 lg:px-10">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16 reveal">
           <span className="inline-block text-sm tracking-[0.3em] uppercase text-sage-dark mb-3 font-medium">

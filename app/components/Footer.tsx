@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-charcoal text-cream">
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-[84rem] mx-auto px-5 sm:px-8 lg:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="space-y-4">
@@ -168,7 +168,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="max-w-[84rem] mx-auto px-5 sm:px-8 lg:px-10 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-cream/40">
             © {new Date().getFullYear()} Dra. Simone Caceres - Todos os direitos
             reservados.

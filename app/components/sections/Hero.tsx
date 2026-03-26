@@ -15,7 +15,7 @@ export default function Hero() {
       <div className="absolute bottom-20 left-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl" />
       <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-terracotta/5 rounded-full blur-2xl" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative max-w-[84rem] mx-auto px-5 sm:px-8 lg:px-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Text Content */}
           <div className="order-2 lg:order-1 text-center lg:text-left pt-20 lg:pt-0">

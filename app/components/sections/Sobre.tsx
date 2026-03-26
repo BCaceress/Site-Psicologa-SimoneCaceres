@@ -2,7 +2,7 @@ import Image from "next/image";
 export default function Sobre() {
   return (
     <section id="sobre" className="py-20 lg:py-32 bg-off-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[84rem] mx-auto px-5 sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Photo */}
           <div className="reveal-left">
