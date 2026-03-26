@@ -143,6 +143,8 @@ const LOADING_MENSAGENS = [
   "Isso não substitui diagnóstico, mas ajuda a indicar um bom primeiro passo.",
 ];
 const HISTORICO_STORAGE_KEY = "quiz-triagem-ultimo-resultado";
+const QUIZ_USAGE_STORAGE_KEY = "quiz-triagem-uso-count";
+const QUIZ_USAGE_LIMIT = 3;
 
 const ESPECIALIDADE_INFO: Record<
   string,
@@ -233,6 +235,25 @@ export default function QuizTriagem() {
   const [erro, setErro] = useState("");
   const [opcaoSelecionada, setOpcaoSelecionada] = useState<string | null>(null);
   const [loadingMensagemIndex, setLoadingMensagemIndex] = useState(0);
+  const [quantidadeUsos, setQuantidadeUsos] = useState(() => {
+    if (typeof window === "undefined") {
+      return 0;
+    }
+
+    const usoSalvo = window.localStorage.getItem(QUIZ_USAGE_STORAGE_KEY);
+    const usoConvertido = Number(usoSalvo);
+
+    if (!usoSalvo || Number.isNaN(usoConvertido) || usoConvertido < 0) {
+      return 0;
+    }
+
+    return usoConvertido;
+  });
+  const [liberacaoExtraPorRefresh, setLiberacaoExtraPorRefresh] = useState(() =>
+    typeof window !== "undefined" &&
+    Number(window.localStorage.getItem(QUIZ_USAGE_STORAGE_KEY) ?? "0") >=
+      QUIZ_USAGE_LIMIT,
+  );
   const [, setHistorico] = useState<HistoricoQuiz | null>(() => {
     if (typeof window === "undefined") {
       return null;
@@ -276,6 +297,16 @@ export default function QuizTriagem() {
       }
     };
   }, []);
+
+  function registrarUsoQuiz() {
+    const novoTotal = Math.min(quantidadeUsos + 1, QUIZ_USAGE_LIMIT);
+    setQuantidadeUsos(novoTotal);
+    window.localStorage.setItem(QUIZ_USAGE_STORAGE_KEY, String(novoTotal));
+
+    if (quantidadeUsos >= QUIZ_USAGE_LIMIT || liberacaoExtraPorRefresh) {
+      setLiberacaoExtraPorRefresh(false);
+    }
+  }
 
   function especialidadeDominante(resps: string[]): string {
     const contagem: Record<string, number> = {};
@@ -398,6 +429,7 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
             data: new Date().toISOString(),
           } satisfies HistoricoQuiz),
         );
+        registrarUsoQuiz();
         setEtapa("resultado");
         return;
       }
@@ -428,6 +460,7 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
         HISTORICO_STORAGE_KEY,
         JSON.stringify(novoHistorico),
       );
+      registrarUsoQuiz();
       setEtapa("resultado");
     } catch {
       setErro(
@@ -491,15 +524,24 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
         ([, valor]) => valor.titulo === resultado.especialidade,
       )?.[1]
     : null;
+  const podeUsarQuiz =
+    quantidadeUsos < QUIZ_USAGE_LIMIT || liberacaoExtraPorRefresh;
+
   return (
-    <section className="py-20 lg:py-32 bg-off-white">
+    <section
+      id="autoconhecimento"
+      className="scroll-mt-28 py-20 lg:py-32 bg-off-white"
+    >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="inline-block text-sm tracking-[0.3em] uppercase text-sage-dark mb-3 font-medium">
             Autoconhecimento
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-charcoal mb-4 leading-tight">
+          <h2 className="hidden">
             Por onde começar?
+          </h2>
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-charcoal mb-4 leading-tight">
+            Autoconhecimento
           </h2>
           <p className="text-charcoal-light leading-relaxed">
             Responda 4 perguntas rápidas e descubra qual área pode te ajudar
@@ -560,12 +602,14 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
                 jornada.
               </p>
 
-              <button
+              {podeUsarQuiz && (
+                <button
                 onClick={() => setEtapa("quiz")}
                 className="px-8 py-4 bg-sage text-white rounded-full font-medium hover:bg-sage-dark transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5"
               >
                 Começar agora →
-              </button>
+                </button>
+              )}
             </div>
           )}
 
@@ -736,12 +780,14 @@ Retorne APENAS JSON válido, sem markdown, sem explicações, com este formato e
                     </a>
                   </div>
 
-                  <button
+                  {podeUsarQuiz && (
+                    <button
                     onClick={reiniciar}
                     className="block mx-auto mt-6 text-xs text-warm-gray hover:text-charcoal transition-colors underline"
                   >
                     Refazer o quiz
-                  </button>
+                    </button>
+                  )}
 
                   <p className="text-center text-xs text-warm-gray/70 mt-4">
                     Este quiz não constitui diagnóstico clínico. É apenas um
